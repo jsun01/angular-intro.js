@@ -28,7 +28,8 @@
                 ngIntroOnbeforechange: '=',
                 ngIntroOnafterchange: '=',
                 ngIntroAutostart: '=',
-                ngIntroAutorefresh: '='
+                ngIntroAutorefresh: '=',
+                ngIntroLocationChangeExit: '='
             },
             link: function(scope, element, attrs) {
 
@@ -38,7 +39,9 @@
 
 
                     var navigationWatch = scope.$on('$locationChangeStart', function(){
-                      intro.exit();
+                      if (scope.ngIntroLocationChangeExit)  {
+                        intro.exit();
+                      }
                     });
 
                     if (typeof(step) === 'string') {
@@ -110,8 +113,18 @@
 
                 scope.ngIntroExitMethod = function (callback) {
                     intro.exit();
-                    callback();
+                    if(callback) {
+                      callback();
+                    }
                 };
+
+                scope.refresh = function () {
+                    intro.refresh();
+                };
+
+                scope.getCurrentStep = function() {
+                  return intro.getCurrentStep();
+                }
 
                 var autoStartWatch = scope.$watch('ngIntroAutostart', function (){
                     if(scope.ngIntroAutostart){
